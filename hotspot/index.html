@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="script.js"></script>
+</head>
+<!-- add source -->
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.js"></script>
+<model-viewer src="deal_with_it_glasses_original.glb" ar ar-modes="webxr scene-viewer quick-look" camera-controls poster="poster.webp" shadow-intensity="1" camera-orbit="0deg 90deg 2m">
+    <button class="Hotspot" slot="hotspot-4" data-position="-0.3968749996274709m 0.15876914296098388m -0.2716620357577808m" data-normal="-1m 0m 1.2246468525851679e-16m" data-visibility-attribute="visible">
+        <div class="HotspotAnnotation">Temple Tip</div>
+    </button><button class="Hotspot" slot="hotspot-6" data-position="-0.3832189477673047m 0.20477017462531522m -0.6390625201165676m" data-normal="-1.2246468525851679e-16m 0m -1m" data-visibility-attribute="visible">
+        <div class="HotspotAnnotation">Rims</div>
+    </button><button class="Hotspot" slot="hotspot-7" data-position="0.5037972882850957m 0.25974310118151434m -0.6238321295118998m" data-normal="0.017452406352603134m 0m -0.9998476951578694m" data-visibility-attribute="visible">
+        <div class="HotspotAnnotation">End Pieces</div>
+    </button><button class="Hotspot" slot="hotspot-9" data-position="-0.3687500003725289m 0.25185962675509266m -0.01888623372078141m" data-normal="1m 0m -1.2246468525851679e-16m" data-visibility-attribute="visible">
+        <div class="HotspotAnnotation">Nose Pad</div>
+    </button>
+    <div class="progress-bar hide" slot="progress-bar">
+        <div class="update-bar"></div>
+    </div>
+    <button slot="ar-button" id="ar-button">
+        View in your space
+    </button>
+    <div id="ar-prompt">
+        <img src="https://modelviewer.dev/shared-assets/icons/hand.png">
+    </div>
+</model-viewer>
+<body>
+    
+    <script>
+        const modelViewer = document.querySelector('model-viewer');
+    
+        // Function to handle hotspot clicks
+        function rotateToHotspot(position) {
+            modelViewer.cameraOrbit = `${position.x}deg ${position.y}deg ${position.z}m`;
+        }
+    
+        // Add click event listeners to hotspots
+        const hotspots = document.querySelectorAll('.Hotspot');
+        hotspots.forEach((hotspot, index) => {
+            hotspot.addEventListener('click', () => {
+                const dataPosition = hotspot.getAttribute('data-position').split(' ');
+                const position = {
+                    x: parseFloat(dataPosition[0]),
+                    y: parseFloat(dataPosition[1]),
+                    z: parseFloat(dataPosition[2])
+                };
+                rotateToHotspot(position);
+            });
+        });
+    </script>
+     
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
