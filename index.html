@@ -1,23 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        model-viewer {
-            width: 100%;
-            height: 300px;
-        }
-    </style>
+    <title>AR Camera Switch</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/2.0.8/aframe/build/aframe-ar.js"></script>
 </head>
-
 <body>
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.js"></script>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <script src="script.js"></script>
-    <model-viewer src="deal_with_it_glasses_original.glb" camera-controls ar camera-orbit="0deg 90deg 5m" autoplay
-        camera-filming-mode="user">
-    </model-viewer>
-</body>
+    <a-scene embedded arjs="sourceType: webcam;">
+        <!-- AR.js camera settings here -->
+        <a-marker preset="hiro">
+            <!-- Place your 3D model here -->
+            <a-entity gltf-model="path/to/your/model.glb"></a-entity>
+        </a-marker>
+    </a-scene>
 
+    <!-- Camera switch button -->
+    <button onclick="switchCamera()">Switch Camera</button>
+
+    <script>
+        // Reference to the AR.js scene
+        const scene = document.querySelector('a-scene');
+
+        // Function to switch between the front and back cameras
+        function switchCamera() {
+            const sourceType = scene.getAttribute('arjs').sourceType;
+            if (sourceType === 'webcam') {
+                // Switch to user-facing (front) camera
+                scene.setAttribute('arjs', 'sourceType', 'user');
+            } else {
+                // Switch to environment-facing (back) camera
+                scene.setAttribute('arjs', 'sourceType', 'webcam');
+            }
+        }
+    </script>
+</body>
 </html>
