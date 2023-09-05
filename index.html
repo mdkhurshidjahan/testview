@@ -2,38 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR Camera Switch</title>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/2.0.8/aframe/build/aframe-ar.js"></script>
+    <title>3D Try-On</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
-<body>
-    <a-scene embedded arjs="sourceType: webcam;">
-        <!-- AR.js camera settings here -->
-        <a-marker preset="hiro">
-            <!-- Place your 3D model here -->
-            <a-entity gltf-model="path/to/your/model.glb"></a-entity>
-        </a-marker>
-    </a-scene>
-
-    <!-- Camera switch button -->
-    <button onclick="switchCamera()">Switch Camera</button>
-
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.js"></script>
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <div style="position: absolute;">
+        <model-viewer
+            src="deal_with_it_glasses_original.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            poster="poster.webp"
+            shadow-intensity="1"
+            camera-orbit="0deg 0deg 0m"
+        >
+            <!-- Your 3D model here -->
+        </model-viewer>
+    </div>
+    <video id="cameraFeed" autoplay style="transform: translate(-100%, -100%); position: absolute; top: 100%; left: 100%;"></video>
     <script>
-        // Reference to the AR.js scene
-        const scene = document.querySelector('a-scene');
+        const cameraFeed = document.getElementById('cameraFeed');
 
-        // Function to switch between the front and back cameras
-        function switchCamera() {
-            const sourceType = scene.getAttribute('arjs').sourceType;
-            if (sourceType === 'webcam') {
-                // Switch to user-facing (front) camera
-                scene.setAttribute('arjs', 'sourceType', 'user');
-            } else {
-                // Switch to environment-facing (back) camera
-                scene.setAttribute('arjs', 'sourceType', 'webcam');
+        // Access the front camera using getUserMedia
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                cameraFeed.srcObject = stream;
+                cameraFeed.style.display = 'block';
+            } catch (error) {
+                console.error('Error accessing camera:', error);
             }
         }
+
+        // Call the startCamera function to initiate camera access
+        startCamera();
     </script>
 </body>
 </html>
