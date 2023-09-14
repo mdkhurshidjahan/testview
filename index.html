@@ -4,69 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AR Cap Try-On</title>
-    <style>
-        #ar-view {
-            width: 100%;
-            height: 100vh;
-        }
-    </style>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 </head>
 <body>
-    <button onclick="startAR()">Start AR</button>
-    <div id="ar-view"></div>
-
-    <script>
-        let xrSession = null;
-        const capModelUrl = 'cap.glb';
-
-        async function startAR() {
-            try {
-                const xr = navigator.xr;
-                if (!xr) {
-                    alert('WebXR is not supported in this browser.');
-                    return;
-                }
-
-                xrSession = await xr.requestSession('immersive-ar', {
-                    requiredFeatures: ['hit-test', 'dom-overlay'],
-                });
-
-                const xrViewerSpace = await xrSession.requestReferenceSpace('viewer');
-                const viewerRefSpace = await xrSession.requestReferenceSpace('viewer');
-
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('xrpresent');
-
-                const cap = document.createElement('a-entity');
-                cap.setAttribute('gltf-model', capModelUrl);
-
-                xrSession.updateRenderState({ baseLayer: new XRWebGLLayer(xrSession, ctx) });
-
-                xrSession.requestAnimationFrame(onXRFrame);
-
-                async function onXRFrame(time, xrFrame) {
-                    xrSession.requestAnimationFrame(onXRFrame);
-
-                    const pose = await xrFrame.getViewerPose(viewerRefSpace);
-                    if (pose) {
-                        const viewerMatrix = pose.transform.matrix;
-                        cap.setAttribute('position', {
-                            x: viewerMatrix[12],
-                            y: viewerMatrix[13],
-                            z: viewerMatrix[14],
-                        });
-                    }
-                }
-
-                const arView = document.getElementById('ar-view');
-                arView.appendChild(canvas);
-                arView.appendChild(cap);
-
-                await xrSession.end();
-            } catch (error) {
-                console.error('Error starting AR:', error);
-            }
-        }
-    </script>
+    <a-scene embedded arjs="sourceType: webcam;">
+        <a-marker preset="hiro">
+            <a-entity
+                position="0 0 0"
+                scale="0.5 0.5 0.5"
+                gltf-model="url(cap.glb)"
+            ></a-entity>
+        </a-marker>
+        <a-entity camera></a-entity>
+    </a-scene>
 </body>
 </html>
